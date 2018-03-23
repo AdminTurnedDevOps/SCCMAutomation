@@ -13,7 +13,7 @@
         [Parameter(Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true,
-            HelpMessage = 'Please enter an application name for your new SCCM collection',
+            HelpMessage = 'Please enter the limited collection name for your new device collection',
             ParameterSetName = 'SCCMQueryMissingApp')]
         [ValidateNotNullOrEmpty()]
         [Alias('LimitingCollection')]
