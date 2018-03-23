@@ -39,7 +39,7 @@
                 'LimitingCollectionName' = $LimitingCollectionName
                 'RefreshType'            = 'Manual'
                 'Comment'                = $Comment
-                'Confirm'                = 'Medium'
+                'Confirm'                = $True
             }
             Write-Verbose 'Creating new device collection'
             $NEWCMDeviceCollection = New-CMDeviceCollection @NewCMDeviceCollectionSPLAT
