@@ -23,11 +23,11 @@ Function Get-SCCMMissingApp {
         ParameterSetName = 'SCCMQueryMissingApp')]
         [string]$Comment,
 
-        [Parameter(Mandatory=$true, 
+        [Parameter( 
         ValueFromPipeline=$true,
         ValueFromPipelineByPropertyName=$true,
         HelpMessage='Please type in the appropriate application name that you want to query')]
-        [string]$Application,
+        [string]$Application = 'UltraVNC',
 
         [Parameter(HelpMessage = 'The error log is for any errors that occur. They will be stored in the specified location',
             ParameterSetName = 'SCCMQueryMissingApp')]
@@ -67,11 +67,15 @@ Function Get-SCCMMissingApp {
                 Write-Output "The collection $CollectionName has been created. Querying the missing application will now begin"
                 $RuleName = $CollectionName += 'MissingApp'
                 #Query missing application from device collection
-                $AddDeviceCollectionQuerySPLAT = @{
+               $AddDeviceCollectionQuerySPLAT = @{
                     'CollectionName'  = $CollectionName
                     'CollectionID'    = $NEWCMDeviceCollection.CollectionID
-                    'QueryExpression' = "select SMS_R_SYSTEM.ResourceID,SMS_R_SYSTEM.ResourceType,SMS_R_SYSTEM.Name,SMS_R_SYSTEM.SMSUniqueIdentifier,SMS_R_SYSTEM.ResourceDomainORWorkgroup,SMS_R_SYSTEM.Client from SMS_R_System  inner join SMS_G_System_COMPUTER_SYSTEM on SMS_G_System_COMPUTER_SYSTEM.ResourceID = SMS_R_System.ResourceId  where SMS_G_System_COMPUTER_SYSTEM.Name not in  (select distinct SMS_G_System_COMPUTER_SYSTEM.Name  from SMS_R_System  inner join SMS_G_System_COMPUTER_SYSTEM on SMS_G_System_COMPUTER_SYSTEM.ResourceID = SMS_R_System.ResourceId  inner join SMS_G_System_ADD_REMOVE_PROGRAMS on SMS_G_System_ADD_REMOVE_PROGRAMS.ResourceID = SMS_R_System.ResourceId  where SMS_G_System_ADD_REMOVE_PROGRAMS.DisplayName like "%$Application%")"
                     'RuleName'        = $RuleName
+                    'QueryExpression' = "select SMS_R_SYSTEM.ResourceID,
+                                    SMS_R_SYSTEM.ResourceType,SMS_R_SYSTEM.Name,
+                                    SMS_R_SYSTEM.SMSUniqueIdentifier,
+                                    SMS_R_SYSTEM.ResourceDomainORWorkgroup,
+                                    SMS_R_SYSTEM.Client from SMS_R_System  inner join SMS_G_System_COMPUTER_SYSTEM on SMS_G_System_COMPUTER_SYSTEM.ResourceID = SMS_R_System.ResourceId  where SMS_G_System_COMPUTER_SYSTEM.Name not in  (select distinct SMS_G_System_COMPUTER_SYSTEM.Name  from SMS_R_System  inner join SMS_G_System_COMPUTER_SYSTEM on SMS_G_System_COMPUTER_SYSTEM.ResourceID = SMS_R_System.ResourceId  inner join SMS_G_System_ADD_REMOVE_PROGRAMS on SMS_G_System_ADD_REMOVE_PROGRAMS.ResourceID = SMS_R_System.ResourceId  where SMS_G_System_ADD_REMOVE_PROGRAMS.DisplayName like "%$Application%")"
                 }
                 $AddDeviceCollectionQuery = Add-CMDeviceCollectionQueryMembershipRule @AddDeviceCollectionQuerySPLAT
     
