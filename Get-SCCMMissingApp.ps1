@@ -56,7 +56,7 @@
             Write-Verbose 'Outputting custom object based on New-CMDeviceCollection output'
             $NEWCMDeviceCollectionPSOBJECT
 
-            IF ($NEWCMDeviceCollection.Name -contains "\w+") {
+            IF ($NEWCMDeviceCollection.Name -match "\w") {
 
                 Write-Output "The collection $CollectionName has been created. Querying the missing application will now begin"
                 $RuleName = $CollectionName += 'MissingApp'
