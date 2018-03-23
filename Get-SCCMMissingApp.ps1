@@ -35,11 +35,11 @@
         Try {
             Write-Verbose 'Collecting New-CMDeviceCollection parameters'
             $NewCMDeviceCollectionSPLAT = @{
-                'Name'               = $CollectionName
-                'LimitingCollection' = $LimitingCollectionName
-                'RefreshType'        = 'Manual'
-                'Comment'            = $Comment
-                'Confirm'            = 'Medium'
+                'Name'                   = $CollectionName
+                'LimitingCollectionName' = $LimitingCollectionName
+                'RefreshType'            = 'Manual'
+                'Comment'                = $Comment
+                'Confirm'                = 'Medium'
             }
             Write-Verbose 'Creating new device collection'
             $NEWCMDeviceCollection = New-CMDeviceCollection @NewCMDeviceCollectionSPLAT
