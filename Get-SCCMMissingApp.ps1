@@ -20,13 +20,13 @@ Function Get-SCCMMissingApp {
         [psobject]$LimitingCollectionName,
 
         [Parameter(HelpMessage = 'Please type in a comment/description for your SCCM collection',
-        ParameterSetName = 'SCCMQueryMissingApp')]
+            ParameterSetName = 'SCCMQueryMissingApp')]
         [string]$Comment,
 
         [Parameter( 
-        ValueFromPipeline=$true,
-        ValueFromPipelineByPropertyName=$true,
-        HelpMessage='Please type in the appropriate application name that you want to query')]
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'Please type in the appropriate application name that you want to query')]
         [string]$Application = 'UltraVNC',
 
         [Parameter(HelpMessage = 'The error log is for any errors that occur. They will be stored in the specified location',
@@ -41,11 +41,11 @@ Function Get-SCCMMissingApp {
         Try {
             Write-Verbose 'Collecting New-CMDeviceCollection parameters'
             $NewCMDeviceCollectionSPLAT = @{
-                'Name'               = $CollectionName
+                'Name'                   = $CollectionName
                 'LimitingCollectionName' = $LimitingCollectionName
-                'RefreshType'        = 'Manual'
-                'Comment'            = $Comment
-                'Confirm'            = $true
+                'RefreshType'            = 'Manual'
+                'Comment'                = $Comment
+                'Confirm'                = $true
             }
             Write-Verbose 'Creating new device collection'
             $NEWCMDeviceCollection = New-CMDeviceCollection @NewCMDeviceCollectionSPLAT
@@ -60,32 +60,24 @@ Function Get-SCCMMissingApp {
             }
 
             Write-Verbose 'Outputting custom object based on New-CMDeviceCollection output'
-            $NEWCMDeviceCollectionPSOBJECT
+            $NEWCMDeviceCollectionPSOBJECT | ft
 
-            IF ($NEWCMDeviceCollection.Name -match "\w") {
-
+            IF ($PSBoundParameters.ContainsKey('Application')) {
                 Write-Output "The collection $CollectionName has been created. Querying the missing application will now begin"
                 $RuleName = $CollectionName += 'MissingApp'
                 #Query missing application from device collection
-               $AddDeviceCollectionQuerySPLAT = @{
-                    'CollectionName'  = $CollectionName
+                $AddDeviceCollectionQueryPARAMS = @{
                     'CollectionID'    = $NEWCMDeviceCollection.CollectionID
                     'RuleName'        = $RuleName
-                    'QueryExpression' = "select SMS_R_SYSTEM.ResourceID,
-                                    SMS_R_SYSTEM.ResourceType,SMS_R_SYSTEM.Name,
-                                    SMS_R_SYSTEM.SMSUniqueIdentifier,
-                                    SMS_R_SYSTEM.ResourceDomainORWorkgroup,
-                                    SMS_R_SYSTEM.Client from SMS_R_System  inner join SMS_G_System_COMPUTER_SYSTEM on SMS_G_System_COMPUTER_SYSTEM.ResourceID = SMS_R_System.ResourceId  where SMS_G_System_COMPUTER_SYSTEM.Name not in  (select distinct SMS_G_System_COMPUTER_SYSTEM.Name  from SMS_R_System  inner join SMS_G_System_COMPUTER_SYSTEM on SMS_G_System_COMPUTER_SYSTEM.ResourceID = SMS_R_System.ResourceId  inner join SMS_G_System_ADD_REMOVE_PROGRAMS on SMS_G_System_ADD_REMOVE_PROGRAMS.ResourceID = SMS_R_System.ResourceId  where SMS_G_System_ADD_REMOVE_PROGRAMS.DisplayName like "%$Application%")"
+                    'QueryExpression' = "select distinct SMS_R_System.Name, SMS_G_System_ADD_REMOVE_PROGRAMS.DisplayName from SMS_R_System inner join SMS_G_System_ADD_REMOVE_PROGRAMS on SMS_G_System_ADD_REMOVE_PROGRAMS.ResourceID = SMS_R_System.ResourceId inner join SMS_G_System_CH_ClientSummary on SMS_G_System_CH_ClientSummary.ResourceID = SMS_R_System.ResourceId where SMS_G_System_ADD_REMOVE_PROGRAMS.DisplayName not like '%$Application%'"
                 }
-                $AddDeviceCollectionQuery = Add-CMDeviceCollectionQueryMembershipRule @AddDeviceCollectionQuerySPLAT
+                $AddDeviceCollectionQuery = Add-CMDeviceCollectionQueryMembershipRule @AddDeviceCollectionQueryPARAMS
     
                 Write-Verbose 'Starting query'
                 $AddDeviceCollectionQuery
-            }#IF
+            }
 
-            else {
-                Write-Output 'No device collection was created. Please try re-running the script'
-            }#ELSE
+
         }#TRY
         Catch {
             Write-Warning 'An error has occured. Please review the error logs'
