@@ -14,7 +14,7 @@ Function New-SCCMDirectQuery {
         [string]$NewDeviceCollectionName,
 
         [ValidateNotNullOrEmpty()]
-        [parameter(HelpMessage = 'Please enter the value to query. Example anything with cci-bji in the name, you would put cci-bji',
+        [parameter(HelpMessage = 'Please enter the value to query',
             ParameterSetName = 'QueryDevices')]
         [string]$CollectionQueryValue,
 
