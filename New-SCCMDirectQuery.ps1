@@ -1,27 +1,32 @@
 Function New-SCCMDirectQuery {
     [cmdletbinding(DefaultParameterSetName = 'QueryDevices', SupportsShouldProcess = $true, ConfirmImpact = 'medium')]
     Param (
-        [Parameter(Mandatory = $true,
+        [Parameter(Position = 0,
+            Mandatory = $true,
             HelpMessage = 'Please choose your device collection that you would like to query from',
             ParameterSetName = 'QueryDevices')]
         [ValidateNotNullOrEmpty()]
         [string]$LimitingCollectionName,
 
-        [Parameter(Mandatory = $true,
+        [Parameter(Position = 1,
+            Mandatory = $true,
             HelpMessage = 'Please put in a name for your new SCCM device collection',
             ParameterSetName = 'QueryDevices')]
         [ValidateNotNullOrEmpty()]
         [string]$NewDeviceCollectionName,
 
         [ValidateNotNullOrEmpty()]
-        [parameter(HelpMessage = 'Please enter the value to query',
+        [parameter(Position = 2,
+            HelpMessage = 'Please enter the value to query',
             ParameterSetName = 'QueryDevices')]
         [string]$CollectionQueryValue,
 
-        [Parameter(ParameterSetName = 'QueryDevices')]
+        [Parameter(Position = 3,
+            ParameterSetName = 'QueryDevices')]
         [string]$LogLocation,
 
-        [Parameter(ParameterSetName = 'QueryDevices')]
+        [Parameter(Position = 4,
+            ParameterSetName = 'QueryDevices')]
         [string]$SCCMServer
 
     )
