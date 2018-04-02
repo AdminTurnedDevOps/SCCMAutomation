@@ -1,7 +1,8 @@
 Function Get-SCCMMissingApp {
     [cmdletbinding(DefaultParameterSetName = 'SCCMQueryMissingApp', SupportsShouldProcess = $true, ConfirmImpact = 'Medium')]
     Param (
-        [Parameter(Mandatory = $true,
+        [Parameter(Position = 0,
+            Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true,
             HelpMessage = 'Please enter a collection name for your new SCCM collection',
@@ -10,7 +11,8 @@ Function Get-SCCMMissingApp {
         [Alias('Name', 'Collection')]
         [psobject]$CollectionName,
 
-        [Parameter(Mandatory = $true,
+        [Parameter(Position = 1,
+            Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true,
             HelpMessage = 'Please enter an application name for your new SCCM collection',
@@ -19,17 +21,19 @@ Function Get-SCCMMissingApp {
         [Alias('LimitingCollection')]
         [psobject]$LimitingCollectionName,
 
-        [Parameter(HelpMessage = 'Please type in a comment/description for your SCCM collection',
+        [Parameter(Position = 2,
+            HelpMessage = 'Please type in a comment/description for your SCCM collection',
             ParameterSetName = 'SCCMQueryMissingApp')]
         [string]$Comment,
 
-        [Parameter( 
+        [Parameter(Position = 3,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true,
             HelpMessage = 'Please type in the appropriate application name that you want to query')]
         [string]$Application = 'UltraVNC',
 
-        [Parameter(HelpMessage = 'The error log is for any errors that occur. They will be stored in the specified location',
+        [Parameter(Position = 4 ,
+            HelpMessage = 'The error log is for any errors that occur. They will be stored in the specified location',
             ParameterSetName = 'SCCMQueryMissingApp')]
         [string]$ErrorLog = (Read-Host 'Please enter a UNC path for an error log if an error occurs in your script')
     )
