@@ -13,7 +13,7 @@ $invokeQuery = Invoke-CMWmiQuery -Query $lastBootTimeQuery -Option Lazy
 Foreach ($Query1 in $invokeQuery) {
 
     $invokeQueryOBJECT = [pscustomobject] @{
-        'test' = $Query1.SMS_R_System
+        'HostInformation' = $Query1.SMS_R_System
     }
                          
     $invokeQueryOBJECT | fl
